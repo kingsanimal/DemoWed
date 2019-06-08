@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>幻灯片</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/common.css" />
+    <style>
+    	.text-hidden{
+        text-indent: -9999px;
+        overflow: hidden;
+        }
+    	.slider{margin-left: 280px;
+    		width: 728px;
+    		height: 504px;
+    		overflow: hidden;
+            position: relative;
+    	}
+        .slider-indicator-wrap{
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            margin-left: -36px;
+           
+        }
+        .slider-indicator{
+            width: 8px; 
+            height: 8px;
+            background-color: #313a43;
+            border-radius: 50%;
+            margin-right: 12px;
+            
+            cursor: pointer;
+        }
+        .slider-indicator-active {
+        	position: relative;
+        	top: -2px;
+        	background-color: #f7f8f9;
+        	border: 2px solid #858b92; 
+        }
+        .slider-control{
+           position: absolute;
+           top: 50%;
+           margin-top: -31px;
+           width: 28px;
+           height: 62px;
+           line-height: 62px;
+           background-color: #000;
+           opacity: 0.4;
+           /*等同于 opacity: 0.4; 是为了兼容IE*/
+           filter: alpha(opacity=40);
+           color: #fff;
+           font-size: 22px;
+           font-family: simsun;
+           text-align: center;
+        }
+        .slider-control-left{
+        	left: 0;
+        }
+        .slider-control-right{
+            right: 0;
+        }
+        .slider-fade .slider-item{
+        	display: none;
+        	top: 0;
+        	left: 0;
+        	width: 100%;
+        	height: 100%;
+        }
+        .slider-slide .slider-item {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /*.slider-slide .slider-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1000%;
+            height: 100%;
+            background-color: red;
+        }
+        .slider-slide .slider-item {
+            float: left;
+        }*/
+    </style>
+</head>
+<body>
+    <!-- 传入哪个父元素，需要思考一下 -->
+    <div id="focus-slider" class="slider ">
+        <div class="slider-container">
+            <!-- 这么写是为了方便添加图片和更改 -->
+            <div class="slider-item">
+                <a href="###" target="_blank"><img src="./img/loading.gif" data-src="./img/focus-slider/1.png" alt="" class="slider-img" /></a>
+            </div>
+            <div class="slider-item">
+                <a href="###" target="_blank"><img src="./img/loading.gif" data-src="./img/focus-slider/2.png" alt="" class="slider-img"  /></a>
+            </div>
+            <div class="slider-item">
+                <a href="###" target="_blank"><img src="./img/loading.gif" data-src="./img/focus-slider/3.png" alt="" class="slider-img" /></a>
+            </div>
+            <div class="slider-item">
+                <a href="###" target="_blank"><img src="./img/loading.gif" data-src="./img/focus-slider/4.png" alt="" class="slider-img"  /></a>
+            </div>
+        </div>
+        <!-- 要是使用无序尼？ -->
+        <ol class="slider-indicator-wrap">
+            <li class="slider-indicator text-hidden fl">1</li>
+            <li class="slider-indicator text-hidden fl">2</li>
+            <li class="slider-indicator text-hidden fl">3</li>
+            <li class="slider-indicator text-hidden fl">4</li>
+        </ol>
+        <a href="javascript:;" class="slider-control slider-control-left">&lt;</a>
+        <a href="javascript:;" class="slider-control slider-control-right">&gt;</a>
+    </div>
+
+
+    <script src="./js/jquery.js"></script>    
+    <script src="./js/transition.js"></script>
+    <script src="./js/showHide.js"></script>    
+    <script src="./js/slider-1.0.js"></script>
+    <!-- <script src="./js/slider-2.0.js"></script> -->
+    <script src="./js/move.js"></script>
+    <script >
+    	//因为获取id是最快的
+    	var $foucusSlider = $('#focus-slider');
+
+    	// $foucusSlider.on('slider-show slider-shown slider-hide slider-hidden',function (e,i, $elem) {
+     //        console.log(i+':'+e.type);
+     //        console.log($elem)
+     //    });
+
+        $foucusSlider.on('slider-show',function (e,index,elem) {
+            //按需加载
+            var $img = $(elem).find('.slider-img');
+
+            loadImg($img.data('src'), function (url){
+                $img.attr('src',url);
+                console.log(index+':loaded');
+            },function (url) {
+                console.log('从' + url + '加载图片失败');
+                // 多加载一次
+                // 显示备用图片
+                $img.attr('src', '../img/focus-slider/placeholder.png');
+            });           
+            
+        });
+         function loadImg(url,imgLoaded,imgFailed) {
+            var image=new Image();
+            image.onerror=function () {
+                if(typeof imgFailed==='function')imgFailed(url);
+            }
+            image.onload=function () {
+                if(typeof imgLoaded==='function') imgLoaded(url);
+            };
+            // image.src=url;     
+              setTimeout(function () {
+                  image.src=url;
+              },1000);
+
+            }
+
+        // $foucusSlider.slider({
+        // 	css3: false,
+        // 	js: false,
+        // 	animation: 'fade',
+        // 	activeIndex: 2,
+        //     interval: 0
+        // })
+        $foucusSlider.slider({
+         css3: true,
+         js: false,
+         animation: 'slide',
+         activeIndex: 0,
+            interval: 0,
+            loop: true
+        })
+    </script>   
+</body>
+</html>

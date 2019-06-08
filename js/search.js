@@ -141,7 +141,9 @@
         }
     }
     Search.prototype.appendLayer = function(html) {
-        this.$layer.html(html)
+        console.log(html)
+        console.log(5)
+        this.$layer.html(html);
         this.loaded = !!html
     }
 
@@ -155,9 +157,9 @@
                 if (!mode) {
                 	$this.data('search', mode = new Search($this, options))
                 }
-                console.log(mode);
+                // console.log(mode);
                 //判断是否有此方法
-                 console.log(mode[option]);
+                 // console.log(mode[option]);
                 if (typeof mode[option] === 'function') {
 
                     console.log(option);
